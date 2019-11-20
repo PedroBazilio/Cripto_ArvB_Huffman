@@ -1,24 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int t = 2;
+//const int t = 2;
 
 typedef struct ArvB{
   int nchaves, folha;
   char *chave;
   struct ArvB **filho;
 }TAB;
+
 /*typedef struct Arvhuff{
   int nchaves, folha;
   char *chave;
   float *freq;
   struct Arvhuff **filho;
 }TAhuff;*/
+
 typedef struct lista{
     char letra;
     int cod;
     struct lista* p;
     }TF;
+
 void pushi(TF**filaini,int letra){
     TF *novo;
     novo=(TF*)malloc(sizeof(TF));
@@ -26,14 +29,15 @@ void pushi(TF**filaini,int letra){
     novo->p=NULL;
     if((*filaini)==NULL){
         (*filaini)=novo;
-        }
+    }
     else{
         TF *aux=(*filaini);
         while(aux->p){
             aux=aux->p;}
         aux->p=novo;
+    }
 }
-}
+
 int popi(TF**filaini){
     if ((*filaini)==NULL)return -7;
     int retorno;
@@ -52,6 +56,7 @@ int popi(TF**filaini){
         return retorno;
     }
 }
+
 void push(TF**filaini,char letra){
     TF *novo;
     novo=(TF*)malloc(sizeof(TF));
@@ -59,16 +64,16 @@ void push(TF**filaini,char letra){
     novo->p=NULL;
     if((*filaini)==NULL){
         (*filaini)=novo;
-        }
+    }
     else{
         TF *aux=(*filaini);
         while(aux->p){
             aux=aux->p;}
         aux->p=novo;
-}
+    }
 }
 char pop(TF**filaini){
-    if ((*filaini)==NULL)return 'ç';
+    if ((*filaini)==NULL)return '?';
     char retorno;
     TF *aux;
     aux=(*filaini);
@@ -85,6 +90,7 @@ char pop(TF**filaini){
         return retorno;
     }
 }
+
 TAB *Cria(int t){
   TAB* novo = (TAB*)malloc(sizeof(TAB));
   novo->nchaves = 0;
@@ -221,7 +227,7 @@ TAB* remover(TAB* arv, char ch, int t){
     }
     if(!arv->folha && arv->filho[i]->nchaves >= t){ //CASO 2A
       printf("\nCASO 2A\n");
-      TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na árvore com raiz em y
+      TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na ï¿½rvore com raiz em y
       while(!y->folha) y = y->filho[y->nchaves];
       int temp = y->chave[y->nchaves-1];
       arv->filho[i] = remover(arv->filho[i], temp, t);
@@ -231,7 +237,7 @@ TAB* remover(TAB* arv, char ch, int t){
     }
     if(!arv->folha && arv->filho[i+1]->nchaves >= t){ //CASO 2B
       printf("\nCASO 2B\n");
-      TAB *y = arv->filho[i+1];  //Encontrar o sucessor k' de k na árvore com raiz em y
+      TAB *y = arv->filho[i+1];  //Encontrar o sucessor k' de k na ï¿½rvore com raiz em y
       while(!y->folha) y = y->filho[0];
       int temp = y->chave[0];
       y = remover(arv->filho[i+1], temp, t); //Eliminar recursivamente K e substitua K por K' em x
@@ -311,7 +317,7 @@ TAB* remover(TAB* arv, char ch, int t){
             y->filho[t+j] = z->filho[j];
           }
         }
-        for(j=i; j < arv->nchaves-1; j++){ //limpar referências de i
+        for(j=i; j < arv->nchaves-1; j++){ //limpar referï¿½ncias de i
           arv->chave[j] = arv->chave[j+1];
           arv->filho[j+1] = arv->filho[j+2];
         }
@@ -413,37 +419,86 @@ void retiracon(TAB* arv){
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
     }
+}
 
-//
+
 int main(int argc, char *argv[]){
   TAB * arvore = Inicializa();
-  int cont=0,chave=0;
+  int cont=0,chave=0, t;
   TF *Ti=NULL;
   TF *Td=NULL;
   char letra,cod;
+  printf("Digite o 't' desejado: ");
+  scanf("%d", &t);
   criaarvore(&arvore,t);
   Imprime(arvore,0);
   while(chave !=-1){
-    printf("Digite -1 para sair 0 para encriptar e 1 para desencriptar\n");
+    printf("Digite :\n");
+    printf("0 para encriptar\n");
+    printf("1 para desencriptar\n");
+    printf("2 para retirar um elemento\n");
+    printf("3 para retirar todas as vogais\n");
+    printf("4 para retirar todas as consoantes\n");
+    printf("5 para retirar todas as letra minÃºsculas\n");
+    printf("6 para retirar todas as letra maiÃºsculas\n");
+    printf("7 para desfazer as alteraÃ§Ãµes\n");
+    printf("-1 para sair\n");
     scanf("%d",&chave);
     while ((getchar()) != '\n');//aparentemente limpa o buffer
   if (chave==0){
-printf("Digite um texto\n");
-  scanf("%c",&letra);
-  cont++;
-  while (letra!='\n'){
-    push(&Ti,letra);
-    cont++;
+    printf("Digite um texto\n");
     scanf("%c",&letra);
-}codifica(arvore,&Ti,cont);
-}
-if (chave==1){
-printf("Digite o codigo\n");
-scanf("%c",&cod);
-  while (cod!='\n'){
-    if(cod>47&&cod<58)pushi(&Td,cod-48);
+    cont++;
+    while (letra!='\n'){
+      push(&Ti,letra);
+      cont++;
+      scanf("%c",&letra);
+    }   
+    codifica(arvore,&Ti,cont);
+  }
+
+  if (chave==1){
+    printf("Digite o codigo\n");
     scanf("%c",&cod);
+    while (cod!='\n'){
+      if(cod>47&&cod<58)pushi(&Td,cod-48);
+      scanf("%c",&cod);
+    }
+    deco(&Td,arvore);
+  }
+
+  /*if(chave==2){
+    falta funÃ§Ã£o para retirar um elemento
+  }*/
+
+  if(chave==3){
+    retiravog(arvore);
+    Imprime(arvore, 0);
+  }
+  
+  if(chave==4){
+    retiracon(arvore);
+    Imprime(arvore, 0);
+  }
+
+  if(chave==5){
+    retiramin(arvore);
+    Imprime(arvore, 0);
+  }
+
+  if(chave==6){
+    retiramai(arvore);
+    Imprime(arvore, 0);
+  }
+
+  if(chave==7){
+    Libera(arvore);
+    criaarvore(&arvore,t);
+  }
+
+
+
 }
-deco(&Td,arvore);
-}}
-return 0;}
+return 0;
+}
+
