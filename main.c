@@ -433,6 +433,7 @@ int main(int argc, char *argv[]){
   criaarvore(&arvore,t);
   Imprime(arvore,0);
   while(chave !=-1){
+    cont=0;
     printf("Digite :\n");
     printf("0 para encriptar\n");
     printf("1 para desencriptar\n");
