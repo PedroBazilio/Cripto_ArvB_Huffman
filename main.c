@@ -408,14 +408,14 @@ void retiramai(TAB* arv){
 
 }
 void retiravog(TAB* arv){
-    char mai[52]={'A','E','I','O','U'};
+    char mai[10]={'A','E','I','O','U','a','e','i','o','u'};
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
     }
 
 }
 void retiracon(TAB* arv){
-    char mai[52]={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z',};
+    char mai[52]={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z'};
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
     }
