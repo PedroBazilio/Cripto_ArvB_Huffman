@@ -68,7 +68,7 @@ void criaarv(float *freq,char *nos,HUFFNo **h,int tam){
                         cont=-2;
 
                 }
-                else if(cont!=-2&&cont!=0&&aux2->freq>=novo->freq){printf("y");
+                else if(cont!=-2&&cont!=0&&aux2->freq>=novo->freq){
                     aux1->prox=novo;
                     novo->prox=aux2;
                     (*h)=aux3;
