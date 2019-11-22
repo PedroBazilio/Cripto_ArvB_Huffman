@@ -390,6 +390,7 @@ if ((*Ti)==NULL)return;
 TAB *aux=arv;
 int j=popi(Ti);
 for(int i=0;i<j;i++){
+  if(i>aux->nchaves)return;
     aux=aux->filho[popi(Ti)];
 }printf("%c",aux->chave[popi(Ti)]);
 deco(Ti,arv);}
