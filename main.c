@@ -393,28 +393,28 @@ for(int i=0;i<j;i++){
     aux=aux->filho[popi(Ti)];
 }printf("%c",aux->chave[popi(Ti)]);
 deco(Ti,arv);}
-void retiramin(TAB* arv){
+void retiramin(TAB* arv,int t){
     char min[52]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
     for(int i=0;i<52;i++){
       arv=retira(arv,min[i],t);
     }
 
 }
-void retiramai(TAB* arv){
+void retiramai(TAB* arv,int t){
     char mai[52]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
     }
 
 }
-void retiravog(TAB* arv){
+void retiravog(TAB* arv,int t){
     char mai[10]={'A','E','I','O','U','a','e','i','o','u'};
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
     }
 
 }
-void retiracon(TAB* arv){
+void retiracon(TAB* arv,int t){
     char mai[52]={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z'};
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
@@ -440,9 +440,9 @@ int main(int argc, char *argv[]){
     printf("2 para retirar um elemento\n");
     printf("3 para retirar todas as vogais\n");
     printf("4 para retirar todas as consoantes\n");
-    printf("5 para retirar todas as letra minúsculas\n");
-    printf("6 para retirar todas as letra maiúsculas\n");
-    printf("7 para desfazer as alterações\n");
+    printf("5 para retirar todas as letra minusculas\n");
+    printf("6 para retirar todas as letra maiusculas\n");
+    printf("7 para desfazer as alteracoes\n");
     printf("-1 para sair\n");
     scanf("%d",&chave);
     while ((getchar()) != '\n');//aparentemente limpa o buffer
@@ -454,7 +454,7 @@ int main(int argc, char *argv[]){
       push(&Ti,letra);
       cont++;
       scanf("%c",&letra);
-    }   
+    }
     codifica(arvore,&Ti,cont);
   }
 
@@ -473,22 +473,22 @@ int main(int argc, char *argv[]){
   }*/
 
   if(chave==3){
-    retiravog(arvore);
+    retiravog(arvore,t);
     Imprime(arvore, 0);
   }
-  
+
   if(chave==4){
-    retiracon(arvore);
+    retiracon(arvore,t);
     Imprime(arvore, 0);
   }
 
   if(chave==5){
-    retiramin(arvore);
+    retiramin(arvore,t);
     Imprime(arvore, 0);
   }
 
   if(chave==6){
-    retiramai(arvore);
+    retiramai(arvore,t);
     Imprime(arvore, 0);
   }
 
