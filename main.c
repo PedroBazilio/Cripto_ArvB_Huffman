@@ -228,7 +228,7 @@ TAB* remover(TAB* arv, char ch, int t){
     }
     if(!arv->folha && arv->filho[i]->nchaves >= t){ //CASO 2A
       printf("\nCASO 2A\n");
-      TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na ï¿½rvore com raiz em y
+      TAB *y = arv->filho[i];  //Encontrar o predecessor k' de k na  rvore com raiz em y
       while(!y->folha) y = y->filho[y->nchaves];
       int temp = y->chave[y->nchaves-1];
       arv->filho[i] = remover(arv->filho[i], temp, t);
@@ -238,7 +238,7 @@ TAB* remover(TAB* arv, char ch, int t){
     }
     if(!arv->folha && arv->filho[i+1]->nchaves >= t){ //CASO 2B
       printf("\nCASO 2B\n");
-      TAB *y = arv->filho[i+1];  //Encontrar o sucessor k' de k na ï¿½rvore com raiz em y
+      TAB *y = arv->filho[i+1];  //Encontrar o sucessor k' de k na  rvore com raiz em y
       while(!y->folha) y = y->filho[0];
       int temp = y->chave[0];
       y = remover(arv->filho[i+1], temp, t); //Eliminar recursivamente K e substitua K por K' em x
@@ -318,7 +318,7 @@ TAB* remover(TAB* arv, char ch, int t){
             y->filho[t+j] = z->filho[j];
           }
         }
-        for(j=i; j < arv->nchaves-1; j++){ //limpar referï¿½ncias de i
+        for(j=i; j < arv->nchaves-1; j++){ //limpar refer ncias de i
           arv->chave[j] = arv->chave[j+1];
           arv->filho[j+1] = arv->filho[j+2];
         }
@@ -401,20 +401,20 @@ void deco(TF **Ti,TAB* arv){
 	for(int i=0;i<j;i++){
   		if(i>aux->nchaves)return;
     	aux=aux->filho[popi(Ti)];
-	}		
+	}
 	printf("%c",aux->chave[popi(Ti)]);
 	deco(Ti,arv);
 }
 
 void retiramin(TAB* arv,int t){
-    char min[52]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+    char min[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
     for(int i=0;i<52;i++){
       arv=retira(arv,min[i],t);
     }
 }
 
 void retiramai(TAB* arv,int t){
-    char mai[52]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    char mai[26]={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
     }
@@ -428,7 +428,7 @@ void retiravog(TAB* arv,int t){
 }
 
 void retiracon(TAB* arv,int t){
-    char mai[52]={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z'};
+    char mai[42]={'B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z','b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z'};
     for(int i=0;i<52;i++){
       arv=retira(arv,mai[i],t);
     }
@@ -446,7 +446,7 @@ int main(int argc, char *argv[]){
   criaarvore(&arvore,t);
   Imprime(arvore,0);
   while(chave !=-1){
-    cont=0;    
+    cont=0;
     printf("\n");
     printf("----------------------------------------------");
     printf("\n");
@@ -461,7 +461,7 @@ int main(int argc, char *argv[]){
     printf("-1 para sair\n");
     printf("----------------------------------------------");
     printf("\n");
-    printf("Digite sua opÃ§Ã£o:");    
+    printf("Digite sua opção:");
     scanf("%d",&chave);
     printf("\n");
     while ((getchar()) != '\n');//aparentemente limpa o buffer
@@ -490,7 +490,7 @@ int main(int argc, char *argv[]){
   }
 
   /*if(chave==2){
-    falta funÃ§Ã£o para retirar um elemento
+    falta função para retirar um elemento
   }*/
 
   if(chave==3){
@@ -530,4 +530,3 @@ int main(int argc, char *argv[]){
 }
 return 0;
 }
-
