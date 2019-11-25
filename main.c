@@ -820,6 +820,11 @@ void codificaauxh(HUFFNo *H,TF **L, TF **L2){
         free(aux);
     }
 }
+
+void retiraElem(TAB* arv, char c, int t){
+	arv=retira(arv,c,t);
+}
+
 int main(int argc, char *argv[]){
   TAB * arvore = Inicializa();
   int cont=0,chave=0, t;
@@ -893,9 +898,15 @@ int main(int argc, char *argv[]){
         printf("\n");
       }
 
-      /*if(chave==2){
-        falta função para retirar um elemento
-      }*/
+      if(chave==2){
+        char c;
+        printf("Qual letra deseja retirar? ");      
+        scanf("%c", &c);
+        while ((getchar()) != '\n');
+        retiraElem(arvore,c,t);
+        Imprime(arvore, 0);
+        printf("\n");
+      }
 
       if(chave==3){
         retiravog(arvore,t);
