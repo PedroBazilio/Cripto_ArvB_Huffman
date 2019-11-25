@@ -902,7 +902,6 @@ int main(int argc, char *argv[]){
         char c;
         printf("Qual letra deseja retirar? ");      
         scanf("%c", &c);
-        while ((getchar()) != '\n');
         retiraElem(arvore,c,t);
         Imprime(arvore, 0);
         printf("\n");
