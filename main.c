@@ -8,8 +8,8 @@ typedef struct ArvB{
   struct ArvB **filho;
 }TAB;
 
-typedef struct no
-{   int tam;
+typedef struct no{   
+	int tam;
 	char* chave;
 	float freq;
 	struct no *esq, *dir;
@@ -45,10 +45,11 @@ int popi(TF**filaini){
     aux=(*filaini);
     TF **pop=filaini;
     if((*filaini)->p!=NULL){
-    retorno=(*filaini)->cod;
-    (*filaini)=aux->p;
-    free((*pop));
-    return retorno;}
+	    retorno=(*filaini)->cod;
+	    (*filaini)=aux->p;
+	    free((*pop));
+	    return retorno;
+	}
     else{
         retorno=(*filaini)->cod;
         (*filaini)=NULL;
@@ -80,10 +81,11 @@ char pop(TF**filaini){
     aux=(*filaini);
     TF **pop=filaini;
     if((*filaini)->p!=NULL){
-    retorno=(*filaini)->letra;
-    (*filaini)=aux->p;
-    free((*pop));
-    return retorno;}
+	    retorno=(*filaini)->letra;
+	    (*filaini)=aux->p;
+	    free((*pop));
+	    return retorno;
+	}
     else{
         retorno=(*filaini)->letra;
         (*filaini)=NULL;
@@ -563,7 +565,7 @@ void decodifica(TF *L,HUFFNo *H){
         if(L&&H){
         while(L->p){
             HUFFNo *aux = H;
-            while((aux->tam != 1)){//se H->tam == 1 quer dizer que é uma folha, portanto chegou em alguma letra.
+            while((aux->tam != 1)){//se H->tam == 1 quer dizer que ?uma folha, portanto chegou em alguma letra.
                 if(!L)return;
                 if((L->cod == 0))aux = aux->esq;
                 else aux = aux->dir;
@@ -578,41 +580,68 @@ void decodifica(TF *L,HUFFNo *H){
     }
 }
 
+void quicksort(float *v1,char *v2,int tam){
+	if(tam<=1)return;
+	float x=v1[0];
+	char  x2=v2[0];
+	int a=1,b=tam-1;
+	do{
+		while((a<tam)&&(v1[a]<=x))a++;
+		while(v1[b]>x)b--;
+		if(a<=b){
+	    	float temp=v1[a];
+	    	char  temp2=v2[a];
+	    	v1[a]=v1[b];
+	    		v2[a]=v2[b];
+	    	v1[b]=temp;
+	    	v2[b]=temp2;
+	    	a++;b--;
+		}
+	}while(a<=b);
+	v1[0]=v1[b];
+	v2[0]=v2[b];
+	v1[b]=x;
+	v2[b]=x2;
+	quicksort(v1,v2,b);
+	quicksort(&v1[b+1],&v2[b+1],tam-b-1);
+}
+
 void arqfreq(char *v1,float *v2){
-FILE *fp1=fopen("freq.txt","rt");
-if((!fp1))exit(1);
-int r1;
-char n1;
-float n2;
-r1=fscanf(fp1,"%c",&n1);
-int i=0;
-int j=0;
-int cfreq=0;
-while(r1!=EOF){
-if(n1==37&&r1!=EOF){
-r1=fscanf(fp1,"%c",&n1);
+	FILE *fp1=fopen("freq.txt","rt");
+	if((!fp1))exit(1);
+	int r1;
+	char n1;
+	float n2;
+	r1=fscanf(fp1,"%c",&n1);
+	int i=0;
+	int j=0;
+	int cfreq=0;
+	while(r1!=EOF){
+	if(n1==37&&r1!=EOF){
+	r1=fscanf(fp1,"%c",&n1);
+	}
+	if(n1=='\n'&&r1!=EOF){
+	r1=fscanf(fp1,"%c",&n1);
+	}
+	while(n1==32&&r1!=EOF){
+	    r1=fscanf(fp1,"%c",&n1);
+	}
+	if(((n1>64&&n1<91)||(n1>96&&n1<123))&&r1!=EOF){
+	v1[i]=n1;
+	cfreq=1;
+	i++;
+	r1=fscanf(fp1,"%c",&n1);
+	}
+	if (cfreq==1){
+	r1=fscanf(fp1,"%f",&n2);
+	v2[j]=n2;
+	j++;
+	cfreq=0;}
+	r1=fscanf(fp1,"%c",&n1);
+	}fclose(fp1);
+	quicksort(v2,v1,52);
 }
-if(n1=='\n'&&r1!=EOF){
-r1=fscanf(fp1,"%c",&n1);
-}
-while(n1==32&&r1!=EOF){
-    r1=fscanf(fp1,"%c",&n1);
-}
-if(((n1>64&&n1<91)||(n1>96&&n1<123))&&r1!=EOF){
-v1[i]=n1;
-cfreq=1;
-i++;
-r1=fscanf(fp1,"%c",&n1);
-}
-if (cfreq==1){
-r1=fscanf(fp1,"%f",&n2);
-v2[j]=n2;
-j++;
-cfreq=0;}
-r1=fscanf(fp1,"%c",&n1);
-}fclose(fp1);
-quicksort(v2,v1,52);
-}
+
 void libera_huff(HUFFNo* t){
   if(t){
     libera_huff(t->esq);
@@ -621,31 +650,6 @@ void libera_huff(HUFFNo* t){
     free(t);
     return;
   }
-}
-
-void quicksort(float *v1,char *v2,int tam){
-if(tam<=1)return;
-float x=v1[0];
-char  x2=v2[0];
-int a=1,b=tam-1;
-do{
-while((a<tam)&&(v1[a]<=x))a++;
-while(v1[b]>x)b--;
-if(a<=b){
-    float temp=v1[a];
-    char  temp2=v2[a];
-    v1[a]=v1[b];
-    v2[a]=v2[b];
-    v1[b]=temp;
-    v2[b]=temp2;
-    a++;b--;
-}}while(a<=b);
-v1[0]=v1[b];
-v2[0]=v2[b];
-v1[b]=x;
-v2[b]=x2;
-quicksort(v1,v2,b);
-quicksort(&v1[b+1],&v2[b+1],tam-b-1);
 }
 
 
@@ -785,6 +789,13 @@ void alteraelem(HUFFNo **h,char *R,float *Rf,float* v1,char *v2,int *tam){
     }
 }
 
+
+void retiraElem(TAB* arv, char *c, int t){
+	arv=retira(arv,c,t);
+}
+
+
+
 int main(int argc, char *argv[]){
   TAB * arvore = Inicializa();
   int cont=0,chave=0, t;
@@ -801,7 +812,7 @@ int main(int argc, char *argv[]){
   criaHuff(v2,v1,&h,52);
   int a;
   while((chave !=-1) &&(a != -1)){
-    printf("\nPara utilizar a Árvore B digite 0 \nPara Árvore de Huffman digite 1\nPara sair digite -1\n");
+    printf("\nPara utilizar a ?rvore B digite 0 \nPara ?rvore de Huffman digite 1\nPara sair digite -1\n");
     scanf("%d",&a);
     if(a == 0){
         printf("Digite o 't' desejado: ");
@@ -823,7 +834,7 @@ int main(int argc, char *argv[]){
         printf("-1 para sair\n");
         printf("----------------------------------------------");
         printf("\n");
-        printf("Digite sua opção:");
+        printf("Digite sua op?o:");
         scanf("%d",&chave);
         printf("\n");
         while ((getchar()) != '\n');//aparentemente limpa o buffer
@@ -835,13 +846,14 @@ int main(int argc, char *argv[]){
           push(&Ti,letra);
           cont++;
           scanf("%c",&letra);
+        	printf("\n");
         }
         codifica(arvore,&Ti,cont);
         printf("\n");
       }
 
       if (chave==1){
-        printf("Digite o codigo\n");
+        printf("Digite o codigo:");
         scanf("%c",&cod);
         while (cod!='\n'){
           if(cod>47&&cod<58)pushi(&Td,cod-48);
@@ -851,9 +863,14 @@ int main(int argc, char *argv[]){
         printf("\n");
       }
 
-      /*if(chave==2){
-        falta função para retirar um elemento
-      }*/
+      if(chave==2){
+        char *c;
+        printf("Qual letra deseja retirar? ");      
+        scanf("%c", c);
+        retiraElem(arvore,c,t);
+        Imprime(arvore, 0);
+        printf("\n");
+    	}
 
       if(chave==3){
         retiravog(arvore,t);
@@ -900,11 +917,11 @@ int main(int argc, char *argv[]){
         printf("5 para retirar todas as letra minusculas\n");
         printf("6 para retirar todas as letra maiusculas\n");
         printf("7 para desfazer as alteracoes\n");
-        printf("8 para alaterar a frequência\n");
+        printf("8 para alaterar a frequ?cia\n");
         printf("-1 para sair\n");
         printf("----------------------------------------------");
         printf("\n");
-        printf("Digite sua opção:");
+        printf("Digite sua op?o:");
         scanf("%d",&chave);
         printf("\n");
         int tam = 52;
@@ -980,10 +997,10 @@ int main(int argc, char *argv[]){
       if(chave==8){
         char R[1];
         float Rf[1];
-        printf("Digite a letra que quer alterar a frequência\n");
+        printf("Digite a letra que quer alterar a frequ?cia\n");
         getchar() != '\n';
         scanf("%c",&R);
-        printf("Digite a frequência\n");
+        printf("Digite a frequ?cia\n");
         scanf("%f",&Rf);
         alteraelem(&h,R,Rf,v2,v1,&tam);
         imprime_aux(h,0);
