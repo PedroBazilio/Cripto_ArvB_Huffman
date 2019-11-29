@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
 
 typedef struct ArvB{
   int nchaves, folha;
@@ -8,8 +8,8 @@ typedef struct ArvB{
   struct ArvB **filho;
 }TAB;
 
-typedef struct no{   
-	int tam;
+typedef struct no
+{   int tam;
 	char* chave;
 	float freq;
 	struct no *esq, *dir;
@@ -45,11 +45,10 @@ int popi(TF**filaini){
     aux=(*filaini);
     TF **pop=filaini;
     if((*filaini)->p!=NULL){
-	    retorno=(*filaini)->cod;
-	    (*filaini)=aux->p;
-	    free((*pop));
-	    return retorno;
-	}
+    retorno=(*filaini)->cod;
+    (*filaini)=aux->p;
+    free((*pop));
+    return retorno;}
     else{
         retorno=(*filaini)->cod;
         (*filaini)=NULL;
@@ -77,19 +76,16 @@ void push(TF**filaini,char letra){
 char pop(TF**filaini){
     if ((*filaini)==NULL)return '?';
     char retorno;
-    TF *aux;
-    aux=(*filaini);
-    TF **pop=filaini;
+    TF *aux=(*filaini);
     if((*filaini)->p!=NULL){
-	    retorno=(*filaini)->letra;
-	    (*filaini)=aux->p;
-	    free((*pop));
-	    return retorno;
-	}
+    retorno=(*filaini)->letra;
+    (*filaini)=(*filaini)->p;
+    free(aux);
+    return retorno;}
     else{
         retorno=(*filaini)->letra;
         (*filaini)=NULL;
-        free((*pop));
+        free(aux);
         return retorno;
     }
 }
@@ -106,6 +102,8 @@ TAB *Cria(int t){
 }
 
 void criaHuff(float *freq,char *nos,HUFFNo **h,int tam){
+    int j=0;
+    int k=0;
     for(int i=0;i<tam;i++){
     HUFFNo* novo=(HUFFNo*)malloc(sizeof(HUFFNo));
     novo->chave=(char*)malloc(sizeof(char*));
@@ -124,8 +122,8 @@ void criaHuff(float *freq,char *nos,HUFFNo **h,int tam){
     aux->prox=novo;
     }}
     while(tam!=1){
-    int j=0;
-    int k=0;
+     j=0;
+     k=0;
         HUFFNo* novo=(HUFFNo*)malloc(sizeof(HUFFNo));
         novo->prox=NULL;
         HUFFNo *aux1=(*h);
@@ -283,7 +281,9 @@ void imprime_aux(HUFFNo* a, int andar){
     imprime_aux(a->dir, andar + 1);
   }
 }
-
+void imprime_ab(HUFFNo* a){
+  imprime_aux(a, 0);
+}
 
 TAB *Busca(TAB* x, char ch){
   TAB *resp = NULL;
@@ -565,9 +565,9 @@ void decodifica(TF *L,HUFFNo *H){
         if(L&&H){
         while(L->p){
             HUFFNo *aux = H;
-            while((aux->tam != 1)){//se H->tam == 1 quer dizer que ?uma folha, portanto chegou em alguma letra.
+            while((aux->tam != 1)){//se H->tam == 1 quer dizer que é uma folha, portanto chegou em alguma letra.
                 if(!L)return;
-                if((L->cod == 0))aux = aux->esq;
+                if(L->cod == 0)aux = aux->esq;
                 else aux = aux->dir;
                 TF *aux2 = L;
                 L = (L)->p;
@@ -579,69 +579,66 @@ void decodifica(TF *L,HUFFNo *H){
     }
     }
 }
-
 void quicksort(float *v1,char *v2,int tam){
-	if(tam<=1)return;
-	float x=v1[0];
-	char  x2=v2[0];
-	int a=1,b=tam-1;
-	do{
-		while((a<tam)&&(v1[a]<=x))a++;
-		while(v1[b]>x)b--;
-		if(a<=b){
-	    	float temp=v1[a];
-	    	char  temp2=v2[a];
-	    	v1[a]=v1[b];
-	    		v2[a]=v2[b];
-	    	v1[b]=temp;
-	    	v2[b]=temp2;
-	    	a++;b--;
-		}
-	}while(a<=b);
-	v1[0]=v1[b];
-	v2[0]=v2[b];
-	v1[b]=x;
-	v2[b]=x2;
-	quicksort(v1,v2,b);
-	quicksort(&v1[b+1],&v2[b+1],tam-b-1);
+if(tam<=1)return;
+float x=v1[0];
+char  x2=v2[0];
+int a=1,b=tam-1;
+do{
+while((a<tam)&&(v1[a]<=x))a++;
+while(v1[b]>x)b--;
+if(a<=b){
+    float temp=v1[a];
+    char  temp2=v2[a];
+    v1[a]=v1[b];
+    v2[a]=v2[b];
+    v1[b]=temp;
+    v2[b]=temp2;
+    a++;b--;
+}}while(a<=b);
+v1[0]=v1[b];
+v2[0]=v2[b];
+v1[b]=x;
+v2[b]=x2;
+quicksort(v1,v2,b);
+quicksort(&v1[b+1],&v2[b+1],tam-b-1);
 }
 
 void arqfreq(char *v1,float *v2){
-	FILE *fp1=fopen("freq.txt","rt");
-	if((!fp1))exit(1);
-	int r1;
-	char n1;
-	float n2;
-	r1=fscanf(fp1,"%c",&n1);
-	int i=0;
-	int j=0;
-	int cfreq=0;
-	while(r1!=EOF){
-	if(n1==37&&r1!=EOF){
-	r1=fscanf(fp1,"%c",&n1);
-	}
-	if(n1=='\n'&&r1!=EOF){
-	r1=fscanf(fp1,"%c",&n1);
-	}
-	while(n1==32&&r1!=EOF){
-	    r1=fscanf(fp1,"%c",&n1);
-	}
-	if(((n1>64&&n1<91)||(n1>96&&n1<123))&&r1!=EOF){
-	v1[i]=n1;
-	cfreq=1;
-	i++;
-	r1=fscanf(fp1,"%c",&n1);
-	}
-	if (cfreq==1){
-	r1=fscanf(fp1,"%f",&n2);
-	v2[j]=n2;
-	j++;
-	cfreq=0;}
-	r1=fscanf(fp1,"%c",&n1);
-	}fclose(fp1);
-	quicksort(v2,v1,52);
+FILE *fp1=fopen("freq.txt","rt");
+if((!fp1))exit(1);
+int r1;
+char n1;
+float n2;
+r1=fscanf(fp1,"%c",&n1);
+int i=0;
+int j=0;
+int cfreq=0;
+while(r1!=EOF){
+if(n1==37&&r1!=EOF){
+r1=fscanf(fp1,"%c",&n1);
 }
-
+if(n1=='\n'&&r1!=EOF){
+r1=fscanf(fp1,"%c",&n1);
+}
+while(n1==32&&r1!=EOF){
+    r1=fscanf(fp1,"%c",&n1);
+}
+if(((n1>64&&n1<91)||(n1>96&&n1<123))&&r1!=EOF){
+v1[i]=n1;
+cfreq=1;
+i++;
+r1=fscanf(fp1,"%c",&n1);
+}
+if (cfreq==1){
+r1=fscanf(fp1,"%f",&n2);
+v2[j]=n2;
+j++;
+cfreq=0;}
+r1=fscanf(fp1,"%c",&n1);
+}fclose(fp1);
+quicksort(v2,v1,52);
+}
 void libera_huff(HUFFNo* t){
   if(t){
     libera_huff(t->esq);
@@ -651,7 +648,6 @@ void libera_huff(HUFFNo* t){
     return;
   }
 }
-
 
 void alterafreq(float* v1,char *v2,float cont,int chave,char *R,int tam){
     int i=0;
@@ -788,20 +784,68 @@ void alteraelem(HUFFNo **h,char *R,float *Rf,float* v1,char *v2,int *tam){
         }
     }
 }
+bool codificah(HUFFNo *H,TF **L, TF **L2){
+    if(!((H->esq)&&(H->dir))&&(H->chave[0]==(*L)->letra)){
+        return true;
+    }
+    else{
+        bool encontrado = false;
+        if(H->esq){
+            TF *aux = (TF*)malloc(sizeof(TF));
+            aux->cod=0;
+            aux->p=NULL;
+            (*L2)->p= aux;
+            encontrado = codificah(H->esq,L,&aux);
+        }
+        if(!encontrado&&H->dir){
+            TF *aux2 = (TF*)malloc(sizeof(TF));
+            aux2->cod=1;
+            aux2->p=NULL;
+            (*L2)->p= aux2;
+            encontrado = codificah(H->dir,L,&aux2);
+        }
+        return encontrado;
+    }
+    }
+void codificaauxh(HUFFNo *H,TF **L, TF **L2){
+    while((*L)){
+        codificah(H,L,L2);
+    TF *aux2=(*L2)->p;
+    while(aux2!=NULL){
+        printf("%d",aux2->cod);
+        aux2=aux2->p;
+    }
+        TF *aux=(*L);
+        (*L)=(*L)->p;
+        free(aux);
+    }
+}
 
-
-void retiraElem(TAB* arv, char *c, int t){
+void retiraElem(TAB* arv, char c, int t){
 	arv=retira(arv,c,t);
 }
+
+
+/*int comparaArv(TAB* arv, HUFFNo *h){
+
+}*/
+
 
 
 
 int main(int argc, char *argv[]){
   TAB * arvore = Inicializa();
-  int cont=0,chave=0, t;
+  int cont=0,chave, t; //aux while princ, chave opc do menu, a escolhe entre arv
   HUFFNo *h=NULL;
   TF *Ti=NULL;
   TF *Td=NULL;
+  TF *lc=NULL;
+  TF *resp=NULL;
+  TF *aux = NULL;
+  aux = (TF*)malloc(sizeof(TF));
+    aux->cod=-1;
+    aux->p=NULL;
+    resp= aux;
   char letra,cod;
   int tam=52;
   char v1[52];
@@ -811,203 +855,214 @@ int main(int argc, char *argv[]){
   float Rf[1]={11.602};
   criaHuff(v2,v1,&h,52);
   int a;
-  while((chave !=-1) &&(a != -1)){
-    printf("\nPara utilizar a ?rvore B digite 0 \nPara ?rvore de Huffman digite 1\nPara sair digite -1\n");
-    scanf("%d",&a);
+  while(a != -1){
+  chave = 0;
+  printf("\nPara utilizar a Arvore B digite 0 \nPara Arvore de Huffman digite 1\nPara sair digite -1\n");
+  scanf("%d",&a);
     if(a == 0){
-        printf("Digite o 't' desejado: ");
-        scanf("%d", &t);
-        criaarvore(&arvore,t);
-        Imprime(arvore,0);
-        cont=0;
-        printf("\n");
-        printf("----------------------------------------------");
-        printf("\n");
-        printf("0 para encriptar\n");
-        printf("1 para desencriptar\n");
-        printf("2 para retirar um elemento\n");
-        printf("3 para retirar todas as vogais\n");
-        printf("4 para retirar todas as consoantes\n");
-        printf("5 para retirar todas as letra minusculas\n");
-        printf("6 para retirar todas as letra maiusculas\n");
-        printf("7 para desfazer as alteracoes\n");
-        printf("-1 para sair\n");
-        printf("----------------------------------------------");
-        printf("\n");
-        printf("Digite sua op?o:");
-        scanf("%d",&chave);
-        printf("\n");
-        while ((getchar()) != '\n');//aparentemente limpa o buffer
-      if (chave==0){
-        printf("Digite um texto: ");
-        scanf("%c",&letra);
-        cont++;
-        while (letra!='\n'){
-          push(&Ti,letra);
-          cont++;
-          scanf("%c",&letra);
-        	printf("\n");
-        }
-        codifica(arvore,&Ti,cont);
-        printf("\n");
-      }
-
-      if (chave==1){
-        printf("Digite o codigo:");
-        scanf("%c",&cod);
-        while (cod!='\n'){
-          if(cod>47&&cod<58)pushi(&Td,cod-48);
-          scanf("%c",&cod);
-        }
-        deco(&Td,arvore);
-        printf("\n");
-      }
-
-      if(chave==2){
-        char *c;
-        printf("Qual letra deseja retirar? ");      
-        scanf("%c", c);
-        retiraElem(arvore,c,t);
-        Imprime(arvore, 0);
-        printf("\n");
-    	}
-
-      if(chave==3){
-        retiravog(arvore,t);
-        Imprime(arvore, 0);
-        printf("\n");
-      }
-
-      if(chave==4){
-        retiracon(arvore,t);
-        Imprime(arvore, 0);
-        printf("\n");
-      }
-
-      if(chave==5){
-        retiramin(arvore,t);
-        Imprime(arvore, 0);
-        printf("\n");
-      }
-
-      if(chave==6){
-        retiramai(arvore,t);
-        Imprime(arvore, 0);
-        printf("\n");
-      }
-
-      if(chave==7){
-        Libera(arvore);
-        TAB * arv = Inicializa();
-        criaarvore(&arv,t);
-        Imprime(arv, 0);
-        printf("\n");
-      }
-    }
-    if(a == 1){
-      imprime_aux(h,0);
-        printf("\n");
-        printf("----------------------------------------------");
-        printf("\n");
-        printf("0 para encriptar\n");
-        printf("1 para desencriptar\n");
-        printf("2 para retirar um elemento\n");
-        printf("3 para retirar todas as vogais\n");
-        printf("4 para retirar todas as consoantes\n");
-        printf("5 para retirar todas as letra minusculas\n");
-        printf("6 para retirar todas as letra maiusculas\n");
-        printf("7 para desfazer as alteracoes\n");
-        printf("8 para alaterar a frequ?cia\n");
-        printf("-1 para sair\n");
-        printf("----------------------------------------------");
-        printf("\n");
-        printf("Digite sua op?o:");
-        scanf("%d",&chave);
-        printf("\n");
-        int tam = 52;
+      printf("Digite o 't' desejado: ");
+      scanf("%d", &t);
+      criaarvore(&arvore,t);
+      Imprime(arvore,0);
+      while(chave !=-1){
+          cont=0;
+          printf("\n");
+          printf("----------------------------------------------");
+          printf("\n");
+          printf("0 para encriptar\n");
+          printf("1 para desencriptar\n");
+          printf("2 para retirar um elemento\n");
+          printf("3 para retirar todas as vogais\n");
+          printf("4 para retirar todas as consoantes\n");
+          printf("5 para retirar todas as letra minusculas\n");
+          printf("6 para retirar todas as letra maiusculas\n");
+          printf("7 para desfazer as alteracoes\n");
+          printf("-1 para sair\n");
+          printf("----------------------------------------------");
+          printf("\n");
+          printf("Digite sua opcao:");
+          scanf("%d",&chave);
+          printf("\n");
+          while ((getchar()) != '\n');//aparentemente limpa o buffer
         if (chave==0){
-            char letra;
-            printf("Digite um texto: ");
-            scanf("%c",&letra);
-        while (letra!='\n'){
-          push(&Ti,letra);
+          printf("Digite um texto: ");
           scanf("%c",&letra);
+          cont++;
+          while (letra!='\n'){
+            push(&Ti,letra);
+            cont++;
+            scanf("%c",&letra);
+          }
+          codifica(arvore,&Ti,cont);
+          printf("\n");
         }
-        codifica(arvore,&Ti,cont);
-        printf("\n");
-      }
 
-      if (chave==1){
-        char s;
-        TF *l = NULL;
-        printf("\nDigite o codigo para decodificar: ");
-        scanf("%c",&s);
-        scanf("%c",&s);
-        while(s!='\n'){
-            pushi(&l,s-48);
-            scanf("%c",&s);
+        if (chave==1){
+          printf("Digite o codigo\n");
+          scanf("%c",&cod);
+          while (cod!='\n'){
+            if(cod>47&&cod<58)pushi(&Td,cod-48);
+            scanf("%c",&cod);
+          }
+          deco(&Td,arvore);
+          printf("\n");
         }
-        decodifica(l,h);
+
+        if(chave==2){
+          char c;
+          printf("Qual letra deseja retirar? ");
+          scanf("%c", &c);
+          retiraElem(arvore,c,t);
+          Imprime(arvore, 0);
+          printf("\n");
+        }
+
+        if(chave==3){
+          retiravog(arvore,t);
+          Imprime(arvore, 0);
+          printf("\n");
+        }
+
+        if(chave==4){
+          retiracon(arvore,t);
+          Imprime(arvore, 0);
+          printf("\n");
+        }
+
+        if(chave==5){
+          retiramin(arvore,t);
+          Imprime(arvore, 0);
+          printf("\n");
+        }
+
+        if(chave==6){
+          retiramai(arvore,t);
+          Imprime(arvore, 0);
+          printf("\n");
+        }
+
+        if(chave==7){
+          Libera(arvore);
+          TAB * arv = Inicializa();
+          criaarvore(&arv,t);
+          Imprime(arv, 0);
+          printf("\n");
+        }
+      }
+    }  
+      if(a == 1){
+        imprime_aux(h,0);
+        while(chave!=-1){
+          
+          printf("\n");
+          printf("----------------------------------------------");
+          printf("\n");
+          printf("0 para encriptar\n");
+          printf("1 para desencriptar\n");
+          printf("2 para retirar um elemento\n");
+          printf("3 para retirar todas as vogais\n");
+          printf("4 para retirar todas as consoantes\n");
+          printf("5 para retirar todas as letra minusculas\n");
+          printf("6 para retirar todas as letra maiusculas\n");
+          printf("7 para desfazer as alteracoes\n");
+          printf("8 para alaterar a frequência\n");
+          printf("-1 para sair\n");
+          printf("----------------------------------------------");
+          printf("\n");
+          printf("Digite sua opcao:");
+          scanf("%d",&chave);
+          printf("\n");
+          int tam = 52;
+          if (chave==0){
+              char letra;
+              printf("Digite um texto: ");
+              while ((getchar()) != '\n');
+              scanf("%c",&letra);
+          while (letra!='\n'){
+            push(&lc,letra);
+            scanf("%c",&letra);
+          }
+          codificaauxh(h,&lc,&resp);
+          printf("\n");
+        }
+
+        if (chave==1){
+          char s;
+          TF *l = NULL;
+          printf("\nDigite o codigo para decodificar: ");
+          scanf("%c",&s);
+          scanf("%c",&s);
+          while(s!='\n'){
+              pushi(&l,s-48);
+              scanf("%c",&s);
+          }
+          decodifica(l,h);
+        }
+
+        if(chave==2){
+          char f;
+          char R[1];
+          float Rf[1] = {0};
+          printf("Digite o elemento que deseja retirar\n");
+          while ((getchar()) != '\n');
+          scanf("%c",&f);
+          R[0]=f;
+          alteraelem(&h,R,Rf,v2,v1,&tam);
+          imprime_aux(h,0);
+          printf("\n");
+        }
+
+        if(chave==3){
+          retiravoghuff(&h,v2,v1,&tam);
+          imprime_aux(h,0);
+          printf("\n");
+        }
+
+        if(chave==4){
+          retiraconshuff(&h,v2,v1,&tam);
+          imprime_aux(h, 0);
+          printf("\n");
+        }
+
+        if(chave==5){
+          retiraminushuff(&h,v2,v1,&tam);
+          imprime_aux(h, 0);
+          printf("\n");
+        }
+
+        if(chave==6){
+          retiramaiushuff(&h,v2,v1,&tam);
+          imprime_ab(h);
+          printf("\n");
+        }
+
+        if(chave==7){
+          libera_huff(h);
+          arqfreq(v1,v2);
+          h = NULL;
+          tam = 52;
+          criaarv(v2,v1,&h,tam);
+          imprime_aux(h,0);
+          printf("\n");
+        }
+        if(chave==8){
+          char l;
+          float lf;
+          char R[1];
+          float Rf[1];
+          printf("Digite a letra que quer alterar a frequência\n");
+          while ((getchar()) != '\n');
+          scanf("%c",&l);
+          R[0]=l;
+          printf("Digite a frequência\n");
+          scanf("%f",&lf);
+          Rf[0]=lf;
+          alteraelem(&h,R,Rf,v2,v1,&tam);
+          imprime_aux(h,0);
+          printf("\n");
+        }
+      }
     }
-
-      if(chave==2){
-        char R[1];
-        float Rf[1] = {0};
-        printf("Digite o elemento que deseja retirar\n");
-        getchar() != '\n';
-        scanf("%c",&R);
-        alteraelem(&h,R,Rf,v2,v1,&tam);
-        imprime_aux(h,0);
-        printf("\n");
-      }
-
-      if(chave==3){
-        retiravoghuff(&h,v2,v1,&tam);
-        imprime_aux(h,0);
-        printf("\n");
-      }
-
-      if(chave==4){
-        retiraconshuff(&h,v2,v1,&tam);
-        imprime_aux(h, 0);
-        printf("\n");
-      }
-
-      if(chave==5){
-        retiraminushuff(&h,v2,v1,&tam);
-        imprime_aux(h, 0);
-        printf("\n");
-      }
-
-      if(chave==6){
-        retiramaiushuff(&h,v2,v1,&tam);
-        imprime_aux(&h, 0);
-        printf("\n");
-      }
-
-      if(chave==7){
-        libera_huff(h);
-        arqfreq(v1,v2);
-        h = NULL;
-        tam = 52;
-        criaarv(v2,v1,&h,tam);
-        imprime_aux(h,0);
-        printf("\n");
-      }
-      if(chave==8){
-        char R[1];
-        float Rf[1];
-        printf("Digite a letra que quer alterar a frequ?cia\n");
-        getchar() != '\n';
-        scanf("%c",&R);
-        printf("Digite a frequ?cia\n");
-        scanf("%f",&Rf);
-        alteraelem(&h,R,Rf,v2,v1,&tam);
-        imprime_aux(h,0);
-        printf("\n");
-      }
-    }
-    }
-
-    return 0;
+  }
+  return 0;
 }
