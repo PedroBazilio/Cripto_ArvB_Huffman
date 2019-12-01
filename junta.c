@@ -766,7 +766,7 @@ void alteraelem(HUFFNo **h,char *R,float *Rf,float* v1,char *v2,int *tam){
             }
                 if(Rf[0]==0){cont=retirahuff(v1,v2,R,1,tam);
                 quicksort(v1,v2,52);
-                alterafreq(v1,v2,cont,0,R,52);
+                alterafreq(v1,v2,cont,0,R,(*tam));
                 libera_huff((*h));
                 (*h)=NULL;
                 criaarv(v1,v2,h,(*tam));
@@ -774,7 +774,7 @@ void alteraelem(HUFFNo **h,char *R,float *Rf,float* v1,char *v2,int *tam){
                 if(v1[i]>Rf[0]){
                     cont=100-(v1[i]-Rf[0]);
                     v1[i]=Rf[0];
-                    alterafreq(v1,v2,cont,1,R,52);
+                    alterafreq(v1,v2,cont,1,R,(*tam));
                     quicksort(v1,v2,52);
                     libera_huff((*h));
                     (*h)=NULL;
@@ -783,7 +783,7 @@ void alteraelem(HUFFNo **h,char *R,float *Rf,float* v1,char *v2,int *tam){
                 if(v1[i]<Rf[0]){
                     cont=100+(Rf[0]-v1[i]);
                     v1[i]=Rf[0];
-                    alterafreq(v1,v2,cont,1,R,52);
+                    alterafreq(v1,v2,cont,1,R,(*tam));
                     quicksort(v1,v2,52);
                     libera_huff((*h));
                     (*h)=NULL;
@@ -817,7 +817,7 @@ bool codificah(HUFFNo *H,TF **L, TF **L2){
     }
 void codificaauxh(HUFFNo *H,TF **L, TF **L2){
     while((*L)){
-        codificah(H,L,L2);
+        if(!codificah(H,L,L2))printf("?");
     TF *aux2=(*L2)->p;
     while(aux2!=NULL){
         printf("%d",aux2->cod);
@@ -834,9 +834,29 @@ void retiraElem(TAB* arv, char c, int t){
 }
 
 
-/*int comparaArv(TAB* arv, HUFFNo *h){
-}*/
+void comparaArv(HUFFNo *H,TF **L, TF **L2,TAB* arv,TF **Ti,int cont){
+    codificaauxh(H,L,L2);
+    printf("\n");
+    codifica(arv,Ti,cont);
+}
+void insere_elem(HUFFNo **h, char letra, float freq, char *v1, float *v2,int *tam){
+    char R[1];R[0]=letra;
+    int a;
+    for(int i = 0; i < 52; i++){
+        if(v1[i] == letra)
+            a = i;
+    }
+    if (v2[a]!=101)return;
+    v2[a]=freq;
+    (*tam)++;
+    alterafreq(v2,v1,100+freq,1,R,(*tam));
+    quicksort(v2,v1,52);
+    libera_huff((*h));
+    (*h)=NULL;
+    criaHuff(v2,v1,h,(*tam));
 
+
+}
 
 
 
@@ -882,7 +902,8 @@ int main(int argc, char *argv[]){
           printf("5 para retirar todas as letra minusculas\n");
           printf("6 para retirar todas as letra maiusculas\n");
           printf("7 para inserir 1 elemento\n");
-          printf("8 para desfazer as alteracoes\n");
+          printf("8 para comparar as arvores\n");
+          printf("9 para desfazer as alteracoes\n");
           printf("-1 para sair\n");
           printf("----------------------------------------------");
           printf("\n");
@@ -954,7 +975,21 @@ int main(int argc, char *argv[]){
           Imprime(arvore, 0);
           printf("\n");
         }
-        if(chave==8){
+        if (chave==8){
+                cont=0;
+          printf("Digite um texto: ");
+          scanf("%c",&letra);
+          cont++;
+          while (letra!='\n'){
+            push(&Ti,letra);
+            push(&lc,letra);
+            cont++;
+            scanf("%c",&letra);
+          }
+          comparaArv(h,&lc,&resp,arvore,&Ti,cont);
+          printf("\n");
+        }
+        if(chave==9){
           Libera(arvore);
           TAB * arv = Inicializa();
           criaarvore(&arv,t);
@@ -978,14 +1013,15 @@ int main(int argc, char *argv[]){
           printf("5 para retirar todas as letra minusculas\n");
           printf("6 para retirar todas as letra maiusculas\n");
           printf("7 para desfazer as alteracoes\n");
-          printf("8 para alaterar a frequência\n");
+          printf("8 para inserir elemento\n");
+          printf("9 para comparar\n");
+          printf("10 para alterar a frequencia\n");
           printf("-1 para sair\n");
           printf("----------------------------------------------");
           printf("\n");
           printf("Digite sua opcao:");
           scanf("%d",&chave);
           printf("\n");
-          int tam = 52;
           if (chave==0){
               char letra;
               printf("Digite um texto: ");
@@ -1059,15 +1095,42 @@ int main(int argc, char *argv[]){
           printf("\n");
         }
         if(chave==8){
+          char letrah;
+          float freqletrah;
+          printf("Digite a letra que quer inserir\n");
+          while ((getchar()) != '\n');
+          scanf("%c",&letrah);
+          printf("Digite a frequencia\n");
+          scanf("%f",&freqletrah);
+          insere_elem(&h,letrah,freqletrah,v1,v2,&tam);
+          imprime_aux(h,0);
+          printf("\n");
+        }
+        if (chave==9){
+                cont=0;
+          printf("Digite um texto: ");
+          while ((getchar()) != '\n');
+          scanf("%c",&letra);
+          cont++;
+          while (letra!='\n'){
+            push(&Ti,letra);
+            push(&lc,letra);
+            cont++;
+            scanf("%c",&letra);
+          }
+          comparaArv(h,&lc,&resp,arvore,&Ti,cont);
+          printf("\n");
+        }
+        if(chave==10){
           char l;
           float lf;
           char R[1];
           float Rf[1];
-          printf("Digite a letra que quer alterar a frequência\n");
+          printf("Digite a letra que quer alterar a frequencia\n");
           while ((getchar()) != '\n');
           scanf("%c",&l);
           R[0]=l;
-          printf("Digite a frequência\n");
+          printf("Digite a frequencia\n");
           scanf("%f",&lf);
           Rf[0]=lf;
           alteraelem(&h,R,Rf,v2,v1,&tam);
