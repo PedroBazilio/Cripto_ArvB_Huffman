@@ -523,33 +523,35 @@ void insere1elem(TAB **arv,char c,int t){
     (*arv)=Insere((*arv),c,t);
 }
 
-int codificaaux(char letra,TAB* arv,int andar){
+TAB *codificaaux2(TAB* x, char ch){
+  TAB *resp = NULL;
+  if(!x) return resp;
   int i = 0;
-  int j=0;
-  while(i < arv->nchaves && letra > arv->chave[i]) i++;
-  if(i < arv->nchaves && letra == arv->chave[i]){
-  	printf("%d",andar);
-  return i;
-	}
-  if(arv->folha){
-    printf("?");
-    return -1;
-	}
-    j=codificaaux(letra,arv->filho[i],andar+1);
-    if(j>=0)printf("%d",i);
-    return j;
+  while(i < x->nchaves && ch > x->chave[i]) i++;
+  printf("%d",i);
+  if(i < x->nchaves && ch == x->chave[i]) {return x;}
+  if(x->folha) return resp;
+  return codificaaux2(x->filho[i], ch);
+}
+TAB *codificaaux1(TAB* x,TAB* aux, char ch,int andar){
+  TAB *resp = NULL;
+  if(!aux) return resp;
+  int i = 0;
+  while(i < aux->nchaves && ch > aux->chave[i]) i++;
+  if(i < aux->nchaves && ch == aux->chave[i]) {printf("%d",andar);codificaaux2(x,ch);return x;}
+  if(aux->folha){printf("?"); return resp;}
+  return codificaaux1(x,aux->filho[i], ch,andar+1);
 }
 
 void codifica(TAB* arv,TF **Ti,int cont){
-	int j;
 	if(!arv||!(*Ti))return;
 	for(int i=0;i<cont-1;i++){
-	j=codificaaux(pop(Ti),arv,0);
-		if (j>=0)printf("%d",j);
+	codificaaux1(arv,arv,pop(Ti),0);
 	}
 }
 
 void deco(TF **Ti,TAB* arv){
+    int a;
 	if ((*Ti)==NULL)return;
 	TAB *aux=arv;
 	int j=popi(Ti);
@@ -558,7 +560,11 @@ void deco(TF **Ti,TAB* arv){
     	if(aux==NULL){printf("?");
     	return;}
 	}
-	printf("%c",aux->chave[popi(Ti)]);
+	a=popi(Ti);
+	if(a+1>aux->nchaves){
+        printf("?");
+        return;}
+	printf("%c",aux->chave[a]);
 	deco(Ti,arv);
 }
 
